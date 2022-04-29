@@ -1,6 +1,8 @@
 
 /*created by prashant shukla */
-var noseY = "";
+var wristY = "";
+var wristX = "";
+var wrist_score = "";
 
 var paddle2 =10,paddle1=10;
 
@@ -27,6 +29,7 @@ function setup(){
   canvas.parent('canvas_div')
   video = createCapture(VIDEO)
   video.size(700,600)
+  video.hide();
 
   poseNet = ml5.poseNet(video,modelLoaded);
   poseNet.on('pose',gotPoses)
@@ -39,13 +42,21 @@ function modelLoaded(){
 function gotPoses(results){
   if(results.length > 0){
     console.log(results)
-    noseY = results[0].pose.nose.y
-    console.log(noseY)
+    wristY = results[0].pose.rightWrist.y
+    wristX = results[0].pose.rightWrist.x
+    wrist_score = results[0].pose.score
+    console.log(wristY)
+    console.log(wristX)
+    console.log(wrist_score)
   }
 }
 
 
+
+
 function draw(){
+
+
 
  background(0); 
 
@@ -56,6 +67,12 @@ function draw(){
  fill("black");
  stroke("black");
  rect(0,0,20,700);
+ image(video,0,0,700,600)
+ if(wrist_score > 0.2){
+  console.log('worsk')
+  fill('red');
+  stroke('red')
+  circle(wristX,wristY,20)
  
    //funtion paddleInCanvas call 
    paddleInCanvas();
@@ -66,6 +83,7 @@ function draw(){
     strokeWeight(0.5);
    paddle1Y = mouseY; 
    rect(paddle1X,paddle1Y,paddle1,paddle1Height,100);
+
    
    
     //pc computer paddle
@@ -84,6 +102,9 @@ function draw(){
    
    //function move call which in very important
     move();
+  
+
+    }
 }
 
 
